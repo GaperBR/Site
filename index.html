@@ -521,9 +521,24 @@
         const perguntas = [
             { tipo: 'verdade', texto: 'Qual foi o primeiro momento que você sentiu algo especial por mim?' },
             { tipo: 'verdade', texto: 'O que você mais gosta na nossa conversa?' },
+            { tipo: 'verdade', texto: 'Qual foi o momento mais engraçado que vivemos?' },
+            { tipo: 'verdade', texto: 'Se pudesse reviver um momento nosso, qual seria?' },
+            { tipo: 'verdade', texto: 'O que mais te marca nas nossas conversas?' },
+            { tipo: 'verdade', texto: 'Qual emoji meu você mais gosta?' },
+            { tipo: 'verdade', texto: 'O que você pensa quando vê uma mensagem minha?' },
+            { tipo: 'verdade', texto: 'Qual é a primeira palavra que vem à mente quando pensa em mim?' },
+            { tipo: 'verdade', texto: 'Se tivesse que me descrever em 3 palavras, quais seriam?' },
+            { tipo: 'verdade', texto: 'Qual momento nosso te deixou mais feliz?' },
             { tipo: 'desafio', texto: 'Me mande uma foto fazendo carinha de brava!' },
+            { tipo: 'desafio', texto: 'Grave um áudio cantando nossa música!' },
             { tipo: 'desafio', texto: 'Me conte um segredo bobo seu!' },
-            { tipo: 'verdade', texto: 'Se pudesse reviver um momento nosso, qual seria?' }
+            { tipo: 'desafio', texto: 'Invente um apelido carinhoso para mim!' },
+            { tipo: 'desafio', texto: 'Mande uma selfie fazendo bico!' },
+            { tipo: 'desafio', texto: 'Grave um áudio falando como criança!' },
+            { tipo: 'desafio', texto: 'Me mande uma foto com a língua pra fora!' },
+            { tipo: 'desafio', texto: 'Invente uma dança maluca e me mostre!' },
+            { tipo: 'desafio', texto: 'Mande um áudio imitando algum animal!' },
+            { tipo: 'desafio', texto: 'Tire uma foto fazendo uma careta engraçada!' }
         ];
 
         function verdadeOuDesafio() {
@@ -956,20 +971,190 @@
 
         function presenteVirtual() {
             document.getElementById('conteudoJogo').innerHTML = `
-                <h2 class="game-title">💝 Presente Virtual</h2>
+                <h2 class="game-title">💝 Presentes</h2>
                 <div style="text-align: center; padding: 2rem;">
-                    <p style="margin-bottom: 2rem;">Clique no presente!</p>
-                    <div style="font-size: 5rem; cursor: pointer;" onclick="abrirPresente()">🎁</div>
-                    <div id="presente" style="margin-top: 2rem;"></div>
-                    <button class="game-btn" onclick="abrirJogos()">🏠 Voltar</button>
+                    <p style="margin-bottom: 2rem; font-size: 1.1rem; color: #6b46c1;">Clique no presente para descobrir sua surpresa especial!</p>
+                    <div style="font-size: 6rem; cursor: pointer; transition: all 0.3s ease; animation: giftFloat 2s ease-in-out infinite;" 
+                         onclick="abrirPresente()" id="giftBox">🎁</div>
+                    <div id="presente" style="margin-top: 2rem; min-height: 120px;"></div>
+                    <div style="margin-top: 1rem;">
+                        <button class="game-btn" onclick="presenteVirtual()" style="margin-top: 1rem;">🔄 Novo Presente</button>
+                        <button class="game-btn" onclick="abrirJogos()">🏠 Voltar</button>
+                    </div>
                 </div>
             `;
         }
 
         function abrirPresente() {
-            const presentes = ['💝 Um abraço gigante!', '🌹 Mil rosas para você!', '🍫 Chocolates infinitos!'];
+            const presentes = [
+                { 
+                    emoji: '💝', 
+                    titulo: 'Você ganhou um pedido!', 
+                    descricao: 'Paranéns! Agora você pode ir no meu chat e pedir o que quiser pro rei do Bait!! 🤗',
+                    cor: '#ff6b6b'
+                },
+                { 
+                    emoji: '🌹', 
+                    titulo: 'Buquê de Mil Rosas!', 
+                    descricao: 'Mil rosas virtuais porque você merece todas as flores do mundo! Sempre quis te dar flores. 💐',
+                    cor: '#e84393'
+                },
+                { 
+                    emoji: '🍫', 
+                    titulo: 'Chocolates Infinitos!', 
+                    descricao: 'Todos os chocolates mais gostosos para adoçar seu dia! 🍫',
+                    cor: '#8b4513'
+                },
+                { 
+                    emoji: '🎵', 
+                    titulo: 'Playlist Especial!', 
+                    descricao: 'Uma playlist com todas as músicas que me lembram você! 🎶',
+                    cor: '#6c5ce7'
+                },
+                { 
+                    emoji: '⭐', 
+                    titulo: 'Estrela Personalizada!', 
+                    descricao: 'Uma estrela no céu virtual só sua, porque você ilumina minha vida! ✨',
+                    cor: '#fdcb6e'
+                },
+                { 
+                    emoji: '🦄', 
+                    titulo: 'Unicórnio Mágico!', 
+                    descricao: 'Um unicórnio fofo para te fazer sorrir e trazer magia ao seu dia! 🌈',
+                    cor: '#fd79a8'
+                },
+                { 
+                    emoji: '💎', 
+                    titulo: 'Diamante do Amor!', 
+                    descricao: 'Um diamante precioso porque você é a joia mais rara que conheço! 💍',
+                    cor: '#74b9ff'
+                },
+                { 
+                    emoji: '💌', 
+                    titulo: 'Confissão', 
+                    descricao: 'Uma Confissão! Você pode me pedir pra falar sobre o que quiser que eu te conto ',
+                    cor: '#55a3ff'
+                },
+                { 
+                    emoji: '🎀', 
+                    titulo: 'Laço do conforto!', 
+                    descricao: 'Um laço para que você se lembre da nossa conexão 💕',
+                    cor: '#ff7675'
+                },
+                { 
+                    emoji: '🌸', 
+                    titulo: 'Jardim de Cerejeiras!', 
+                    descricao: 'Um jardim florido com as flores mais delicadas, como sua beleza! 🌺',
+                    cor: '#fd79a8'
+                },
+                { 
+                    emoji: '💋', 
+                    titulo: 'Beijocas', 
+                    descricao: 'Esse presente é obrigatório ser recebido! Por gentileza, se dirigir ao meu chat para que possamos combinar local de entrega',
+                    cor: '#fdcb6e'
+                },
+                { 
+                    emoji: '🏰', 
+                    titulo: 'Castelo dos Sonhos!', 
+                    descricao: 'Um castelo encantado onde todos os nossos sonhos se realizam! You can be my princess honey. 👑',
+                    cor: '#a29bfe'
+                }
+            ];
+            
             const presente = presentes[Math.floor(Math.random() * presentes.length)];
-            document.getElementById('presente').innerHTML = `<p style="font-size:1.2rem;color:#6b46c1;background:rgba(255,192,203,0.2);padding:1rem;border-radius:15px;">${presente}</p>`;
+            const giftBox = document.getElementById('giftBox');
+            const container = document.getElementById('presente');
+            
+            // Animação de abertura do presente
+            giftBox.style.animation = 'giftShake 0.5s ease-in-out';
+            giftBox.style.transform = 'scale(1.2)';
+            
+            setTimeout(() => {
+                giftBox.innerHTML = '📦';
+                giftBox.style.transform = 'scale(1)';
+                giftBox.style.animation = 'giftOpen 1s ease-out';
+                
+                // Chuva de partículas
+                createGiftParticles();
+                
+                // Mostrar o presente
+                setTimeout(() => {
+                    container.innerHTML = `
+                        <div style="background: linear-gradient(135deg, ${presente.cor}20, ${presente.cor}40); 
+                                    padding: 1.5rem; border-radius: 20px; border: 3px dashed ${presente.cor}; 
+                                    animation: presentReveal 0.8s ease-out; position: relative; overflow: hidden;">
+                            <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; 
+                                        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent); 
+                                        animation: shimmer 2s ease-in-out infinite;"></div>
+                            <div style="font-size: 3rem; margin-bottom: 1rem; animation: bounce 1s ease-in-out infinite;">${presente.emoji}</div>
+                            <h3 style="color: ${presente.cor}; margin-bottom: 1rem; font-size: 1.4rem; animation: fadeInUp 0.6s ease-out 0.3s both;">${presente.titulo}</h3>
+                            <p style="font-size: 1.1rem; color: #4a5568; line-height: 1.5; animation: fadeInUp 0.6s ease-out 0.6s both;">
+                                ${presente.descricao}
+                            </p>
+                            <div style="margin-top: 1rem; animation: fadeInUp 0.6s ease-out 0.9s both;">
+                                <span style="background: ${presente.cor}; color: white; padding: 0.3rem 0.8rem; 
+                                             border-radius: 15px; font-size: 0.9rem; font-weight: bold;">
+                                    ✨ Presente Especial ✨
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Mais partículas de celebração
+                    setTimeout(() => createCelebrationParticles(), 500);
+                    
+                }, 500);
+                
+            }, 500);
+        }
+
+        function createGiftParticles() {
+            const particles = ['✨', '🌟', '💫', '⭐', '🎊', '🎉', '💖', '💕'];
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.innerHTML = particles[Math.floor(Math.random() * particles.length)];
+                    particle.style.cssText = `
+                        position: fixed;
+                        left: 50%;
+                        top: 40%;
+                        font-size: 1.5rem;
+                        pointer-events: none;
+                        z-index: 9999;
+                        animation: explodeParticle 2s ease-out forwards;
+                    `;
+                    
+                    // Direção aleatória para explosão
+                    const angle = (Math.PI * 2 * i) / 15;
+                    const distance = 100 + Math.random() * 100;
+                    particle.style.setProperty('--end-x', Math.cos(angle) * distance + 'px');
+                    particle.style.setProperty('--end-y', Math.sin(angle) * distance + 'px');
+                    
+                    document.body.appendChild(particle);
+                    setTimeout(() => particle.remove(), 2000);
+                }, i * 50);
+            }
+        }
+
+        function createCelebrationParticles() {
+            const celebrationEmojis = ['🎊', '🎉', '✨', '🌟', '💖', '💕', '🎀', '🌈'];
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.innerHTML = celebrationEmojis[Math.floor(Math.random() * celebrationEmojis.length)];
+                    particle.style.cssText = `
+                        position: fixed;
+                        left: ${Math.random() * 100}%;
+                        top: -50px;
+                        font-size: 1.2rem;
+                        pointer-events: none;
+                        z-index: 9999;
+                        animation: fallAndSpin 3s ease-in forwards;
+                    `;
+                    document.body.appendChild(particle);
+                    setTimeout(() => particle.remove(), 3000);
+                }, i * 100);
+            }
         }
 
         function mostrarSurpresa() {
@@ -1010,6 +1195,57 @@
             @keyframes slideIn{
                 from{transform:translateX(300px); opacity:0;}
                 to{transform:translateX(0); opacity:1;}
+            }
+            @keyframes giftFloat{
+                0%, 100%{transform:translateY(0px);}
+                50%{transform:translateY(-10px);}
+            }
+            @keyframes giftShake{
+                0%, 100%{transform:translateX(0);}
+                25%{transform:translateX(-5px);}
+                75%{transform:translateX(5px);}
+            }
+            @keyframes giftOpen{
+                0%{transform:scale(1.2) rotate(0deg);}
+                50%{transform:scale(1.4) rotate(10deg);}
+                100%{transform:scale(1) rotate(0deg);}
+            }
+            @keyframes presentReveal{
+                0%{transform:scale(0) rotate(-10deg); opacity:0;}
+                50%{transform:scale(1.1) rotate(5deg); opacity:0.8;}
+                100%{transform:scale(1) rotate(0deg); opacity:1;}
+            }
+            @keyframes shimmer{
+                0%{transform:translateX(-100%) rotate(45deg);}
+                100%{transform:translateX(100%) rotate(45deg);}
+            }
+            @keyframes fadeInUp{
+                from{transform:translateY(30px); opacity:0;}
+                to{transform:translateY(0); opacity:1;}
+            }
+            @keyframes explodeParticle{
+                0%{
+                    transform:translate(-50%, -50%) scale(0) rotate(0deg);
+                    opacity:1;
+                }
+                50%{
+                    transform:translate(calc(-50% + var(--end-x) * 0.7), calc(-50% + var(--end-y) * 0.7)) scale(1.2) rotate(180deg);
+                    opacity:0.8;
+                }
+                100%{
+                    transform:translate(calc(-50% + var(--end-x)), calc(-50% + var(--end-y))) scale(0.3) rotate(360deg);
+                    opacity:0;
+                }
+            }
+            @keyframes fallAndSpin{
+                0%{
+                    transform:translateY(0) rotate(0deg);
+                    opacity:1;
+                }
+                100%{
+                    transform:translateY(100vh) rotate(720deg);
+                    opacity:0;
+                }
             }
         `;
         document.head.appendChild(style);
