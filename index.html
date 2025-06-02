@@ -369,6 +369,121 @@
             display: inline-block;
         }
 
+        /* Estilos para os mini jogos */
+        .game-modal {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 2rem;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: #4a5568;
+        }
+
+        .game-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #6b46c1;
+        }
+
+        .compliment-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1500;
+        }
+
+        .falling-compliment {
+            position: absolute;
+            font-size: 1.2rem;
+            color: #ff69b4;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fallDown 4s linear forwards;
+        }
+
+        @keyframes fallDown {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .heart-game {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .game-heart {
+            display: inline-block;
+            font-size: 3rem;
+            margin: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: heartPulse 1s infinite;
+        }
+
+        @keyframes heartPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .game-heart:hover {
+            transform: scale(1.3);
+        }
+
+        .score {
+            font-size: 1.5rem;
+            margin: 1rem 0;
+            color: #6b46c1;
+            font-weight: bold;
+        }
+
+        .present-box {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .gift-box {
+            font-size: 5rem;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            display: inline-block;
+        }
+
+        .gift-box:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .gift-opened {
+            animation: giftOpen 1s ease-out;
+        }
+
+        @keyframes giftOpen {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.3) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .game-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .game-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
         @media (max-width: 768px) {
             .container { padding: 10px; }
             .card { margin: 1rem 0; padding: 1.5rem; }
@@ -376,6 +491,7 @@
             .gallery-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
             .modal-content { padding: 10px; }
             .close-modal { font-size: 2rem; top: 5px; right: 15px; }
+            .game-modal { padding: 1rem; }
         }
     </style>
 </head>
@@ -459,6 +575,14 @@
             </div>
         </div>
 
+        <!-- Modal para os jogos -->
+        <div id="gameModal" class="modal" onclick="closeGameModal()">
+            <div class="modal-content game-modal" onclick="event.stopPropagation()">
+                <span class="close-modal" onclick="closeGameModal()">&times;</span>
+                <div id="gameContent"></div>
+            </div>
+        </div>
+
         <div class="card">
             <span class="emoji-big">💕</span>
             <h2 style="text-align: center; color: #6b46c1; margin-bottom: 1rem;">Nosso Cantinho Especial</h2>
@@ -468,7 +592,7 @@
                 <span class="sparkle">💖</span>
             </p>
             <div style="text-align: center;">
-                <button class="btn" onclick="window.open('mailto:seuemail@exemplo.com')">Mandar Carinho 💌</button>
+                <button class="btn" onclick="showGameMenu()">Mini Jogos do Amor 🎮</button>
                 <button class="btn" onclick="alert('Você ilumina meus dias! Eu gosto muito de você! 🌟💕')">Mensagem Secreta 💭</button>
             </div>
         </div>
@@ -528,11 +652,46 @@
             }
         ];
 
+        // 🎮 ÁREA DOS MINI JOGOS
+        const verdadeOuDesafio = [
+            { tipo: 'verdade', texto: 'Qual foi o primeiro momento que você sentiu algo especial por mim?' },
+            { tipo: 'verdade', texto: 'O que você mais gosta na nossa conversa?' },
+            { tipo: 'verdade', texto: 'Qual foi o momento mais engraçado que vivemos?' },
+            { tipo: 'desafio', texto: 'Me mande uma foto fazendo carinha de brava!' },
+            { tipo: 'desafio', texto: 'Grave um áudio cantando nossa música!' },
+            { tipo: 'desafio', texto: 'Me conte um segredo bobo seu!' },
+            { tipo: 'verdade', texto: 'Se pudesse reviver um momento nosso, qual seria?' },
+            { tipo: 'desafio', texto: 'Invente um apelido carinhoso para mim!' }
+        ];
+
+        const elogios = [
+            'Você é simplesmente incrível! ✨',
+            'Seu sorriso ilumina meu dia! 😊',
+            'Você é a pessoa mais especial! 💖',
+            'Seu jeito único me encanta! 🌟',
+            'Você é pura magia! ✨',
+            'Seu coração é lindo! 💝',
+            'Você me faz muito feliz! 😄',
+            'Sua personalidade é perfeita! 🌸',
+            'Você é meu raio de sol! ☀️',
+            'Amo sua autenticidade! 💫'
+        ];
+
+        const presentesVirtuais = [
+            '💝 Um abraço virtual gigante cheio de carinho!',
+            '🌹 Mil rosas virtuais porque você merece!',
+            '🍫 Chocolates infinitos para adoçar seu dia!',
+            '🎵 Uma playlist com todas as músicas que me lembram você!',
+            '⭐ Uma estrela virtual só sua no céu!',
+            '🦄 Um unicórnio mágico para te fazer sorrir!',
+            '💎 Um diamante virtual porque você é preciosa!',
+            '🌈 Um arco-íris de felicidade só para você!'
+        ];
+
         // 🚀 CARREGAMENTO AUTOMÁTICO DA GALERIA
-        // Esta função cria a galeria automaticamente baseada nas fotos acima
         function carregarGaleria() {
             const galleryGrid = document.querySelector('.gallery-grid');
-            galleryGrid.innerHTML = ''; // Limpar conteúdo existente
+            galleryGrid.innerHTML = '';
 
             minhasFotos.forEach((foto, index) => {
                 const photoCard = document.createElement('div');
@@ -551,10 +710,9 @@
             });
         }
 
-        // Carregar galeria quando a página carregar
         document.addEventListener('DOMContentLoaded', carregarGaleria);
 
-        // Função para abrir modal da galeria
+        // FUNÇÕES DA GALERIA
         function openModal(imageSrc, title) {
             const modal = document.getElementById('photoModal');
             const modalImg = document.getElementById('modalImage');
@@ -564,7 +722,6 @@
             modalImg.src = imageSrc;
             modalTitle.textContent = title;
             
-            // Adicionar efeito de partículas especial
             for (let i = 0; i < 10; i++) {
                 setTimeout(() => {
                     createSpecialParticle();
@@ -572,20 +729,243 @@
             }
         }
 
-        // Função para fechar modal
         function closeModal() {
-            const modal = document.getElementById('photoModal');
-            modal.style.display = 'none';
+            document.getElementById('photoModal').style.display = 'none';
         }
 
-        // Fechar modal com tecla ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeModal();
-            }
-        });
+        // 🎮 FUNÇÕES DOS MINI JOGOS
+        function showGameMenu() {
+            const gameContent = document.getElementById('gameContent');
+            gameContent.innerHTML = `
+                <h2 class="game-title">🎮 Mini Jogos do Amor</h2>
+                <p style="text-align: center; margin-bottom: 2rem;">Escolha um joguinho para nos divertirmos! 💕</p>
+                <div style="text-align: center;">
+                    <button class="game-btn" onclick="startTruthOrDare()">🎲 Verdade ou Desafio</button><br>
+                    <button class="game-btn" onclick="startComplimentRain()">💫 Chuva de Elogios</button><br>
+                    <button class="game-btn" onclick="startHeartGame()">🎮 Jogo dos Corações</button><br>
+                    <button class="game-btn" onclick="startVirtualGift()">💝 Presente Virtual</button>
+                </div>
+            `;
+            document.getElementById('gameModal').style.display = 'block';
+        }
 
-        // Criar partículas especiais para o modal
+        function closeGameModal() {
+            document.getElementById('gameModal').style.display = 'none';
+        }
+
+        // 🎲 VERDADE OU DESAFIO
+        function startTruthOrDare() {
+            const randomItem = verdadeOuDesafio[Math.floor(Math.random() * verdadeOuDesafio.length)];
+            const gameContent = document.getElementById('gameContent');
+            
+            gameContent.innerHTML = `
+                <h2 class="game-title">🎲 Verdade ou Desafio</h2>
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">
+                        ${randomItem.tipo === 'verdade' ? '🤔' : '💪'}
+                    </div>
+                    <h3 style="color: #6b46c1; margin-bottom: 1rem;">
+                        ${randomItem.tipo === 'verdade' ? 'VERDADE' : 'DESAFIO'}
+                    </h3>
+                    <p style="font-size: 1.2rem; margin-bottom: 2rem; background: rgba(255, 192, 203, 0.2); padding: 1rem; border-radius: 15px;">
+                        ${randomItem.texto}
+                    </p>
+                    <button class="game-btn" onclick="startTruthOrDare()">🔄 Outro ${randomItem.tipo}</button>
+                    <button class="game-btn" onclick="showGameMenu()">🏠 Voltar ao Menu</button>
+                </div>
+            `;
+        }
+
+        // 💫 CHUVA DE ELOGIOS
+        function startComplimentRain() {
+            const gameContent = document.getElementById('gameContent');
+            gameContent.innerHTML = `
+                <h2 class="game-title">💫 Chuva de Elogios</h2>
+                <div style="text-align: center; padding: 2rem;">
+                    <p style="font-size: 1.2rem; margin-bottom: 2rem;">
+                        Prepare-se para uma chuva de elogios especiais! ✨
+                    </p>
+                    <button class="game-btn" onclick="createComplimentRain()">🌧️ Começar Chuva de Elogios</button>
+                    <button class="game-btn" onclick="showGameMenu()">🏠 Voltar ao Menu</button>
+                </div>
+            `;
+        }
+
+        function createComplimentRain() {
+            // Criar div para chuva de elogios
+            const rainDiv = document.createElement('div');
+            rainDiv.className = 'compliment-rain';
+            rainDiv.id = 'complimentRain';
+            document.body.appendChild(rainDiv);
+
+            // Criar 20 elogios caindo
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const compliment = document.createElement('div');
+                    compliment.className = 'falling-compliment';
+                    compliment.textContent = elogios[Math.floor(Math.random() * elogios.length)];
+                    compliment.style.left = Math.random() * 100 + '%';
+                    compliment.style.animationDelay = '0s';
+                    compliment.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                    rainDiv.appendChild(compliment);
+                    
+                    setTimeout(() => {
+                        compliment.remove();
+                    }, 5000);
+                }, i * 200);
+            }
+
+            // Remover a chuva após 8 segundos
+            setTimeout(() => {
+                if (document.getElementById('complimentRain')) {
+                    document.getElementById('complimentRain').remove();
+                }
+            }, 8000);
+        }
+
+        // 🎮 JOGO DOS CORAÇÕES
+        let heartScore = 0;
+        let heartGameActive = false;
+
+        function startHeartGame() {
+            heartScore = 0;
+            heartGameActive = true;
+            const gameContent = document.getElementById('gameContent');
+            
+            gameContent.innerHTML = `
+                <h2 class="game-title">🎮 Jogo dos Corações</h2>
+                <div class="heart-game">
+                    <p style="margin-bottom: 1rem;">Clique nos corações o mais rápido que conseguir!</p>
+                    <div class="score">Pontuação: <span id="heartScore">0</span> 💖</div>
+                    <div id="heartsContainer" style="min-height: 200px; margin: 2rem 0;">
+                        <!-- Corações aparecerão aqui -->
+                    </div>
+                    <button class="game-btn" onclick="endHeartGame()">🛑 Parar Jogo</button>
+                    <button class="game-btn" onclick="showGameMenu()">🏠 Voltar ao Menu</button>
+                </div>
+            `;
+
+            generateHearts();
+        }
+
+        function generateHearts() {
+            if (!heartGameActive) return;
+            
+            const container = document.getElementById('heartsContainer');
+            if (!container) return;
+            
+            const heart = document.createElement('span');
+            heart.className = 'game-heart';
+            heart.innerHTML = '💖';
+            heart.onclick = () => {
+                heartScore++;
+                document.getElementById('heartScore').textContent = heartScore;
+                heart.remove();
+                createHeartParticles();
+            };
+            
+            container.appendChild(heart);
+            
+            // Remover coração após 2 segundos se não clicado
+            setTimeout(() => {
+                if (heart.parentNode) {
+                    heart.remove();
+                }
+            }, 2000);
+            
+            // Gerar próximo coração
+            setTimeout(() => {
+                generateHearts();
+            }, Math.random() * 1000 + 500);
+        }
+
+        function endHeartGame() {
+            heartGameActive = false;
+            const gameContent = document.getElementById('gameContent');
+            gameContent.innerHTML = `
+                <h2 class="game-title">🎮 Resultado Final</h2>
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
+                    <h3 style="color: #6b46c1; margin-bottom: 1rem;">Parabéns!</h3>
+                    <p style="font-size: 1.5rem; margin-bottom: 2rem;">
+                        Você capturou <strong>${heartScore} corações</strong>! 💖
+                    </p>
+                    <p style="margin-bottom: 2rem;">
+                        ${heartScore < 5 ? 'Não desista! O amor requer prática! 💪' : 
+                          heartScore < 10 ? 'Muito bem! Você tem um coração amoroso! 💕' : 
+                          'Incrível! Você é uma expert em amor! 🌟'}
+                    </p>
+                    <button class="game-btn" onclick="startHeartGame()">🔄 Jogar Novamente</button>
+                    <button class="game-btn" onclick="showGameMenu()">🏠 Voltar ao Menu</button>
+                </div>
+            `;
+        }
+
+        function createHeartParticles() {
+            for (let i = 0; i < 5; i++) {
+                const particle = document.createElement('div');
+                particle.innerHTML = '💖';
+                particle.style.cssText = `
+                    position: fixed;
+                    left: ${event.clientX}px;
+                    top: ${event.clientY}px;
+                    font-size: 1rem;
+                    pointer-events: none;
+                    z-index: 2000;
+                    animation: heartParticleFloat 1s ease-out forwards;
+                `;
+                document.body.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, 1000);
+            }
+        }
+
+        // 💝 PRESENTE VIRTUAL
+        function startVirtualGift() {
+            const gameContent = document.getElementById('gameContent');
+            gameContent.innerHTML = `
+                <h2 class="game-title">💝 Presente Virtual</h2>
+                <div class="present-box">
+                    <p style="margin-bottom: 2rem;">Clique na caixinha para abrir seu presente especial!</p>
+                    <div class="gift-box" onclick="openVirtualGift()" id="giftBox">🎁</div>
+                    <div id="giftContent" style="margin-top: 2rem; min-height: 100px;"></div>
+                    <button class="game-btn" onclick="startVirtualGift()" style="margin-top: 1rem;">🔄 Novo Presente</button>
+                    <button class="game-btn" onclick="showGameMenu()">🏠 Voltar ao Menu</button>
+                </div>
+            `;
+        }
+
+        function openVirtualGift() {
+            const giftBox = document.getElementById('giftBox');
+            const giftContent = document.getElementById('giftContent');
+            const randomGift = presentesVirtuais[Math.floor(Math.random() * presentesVirtuais.length)];
+            
+            // Animação de abrir
+            giftBox.classList.add('gift-opened');
+            giftBox.innerHTML = '📦';
+            
+            setTimeout(() => {
+                giftContent.innerHTML = `
+                    <div style="background: rgba(255, 192, 203, 0.2); padding: 1.5rem; border-radius: 15px; border: 2px dashed #ff69b4;">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">✨</div>
+                        <p style="font-size: 1.2rem; color: #6b46c1; font-weight: bold;">
+                            ${randomGift}
+                        </p>
+                    </div>
+                `;
+                
+                // Efeito de partículas especiais
+                for (let i = 0; i < 15; i++) {
+                    setTimeout(() => {
+                        createSpecialParticle();
+                    }, i * 100);
+                }
+            }, 500);
+        }
+
+        // PARTÍCULAS E ANIMAÇÕES
         function createSpecialParticle() {
             const particles = ['✨', '💖', '🌟', '💫', '🎀', '🦄', '🌸'];
             const particle = document.createElement('div');
@@ -607,7 +987,6 @@
             }, 3000);
         }
 
-        // Criar corações flutuantes
         function createHeart() {
             const heart = document.createElement('div');
             heart.className = 'heart';
@@ -622,10 +1001,9 @@
             }, 6000);
         }
 
-        // Criar corações periodicamente
         setInterval(createHeart, 1500);
 
-        // Função de surpresa
+        // FUNÇÃO DE SURPRESA ORIGINAL
         function showSurprise() {
             const surprises = [
                 '🎉 Você é incrível!',
@@ -637,7 +1015,6 @@
             
             const randomSurprise = surprises[Math.floor(Math.random() * surprises.length)];
             
-            // Criar elemento de surpresa
             const surpriseDiv = document.createElement('div');
             surpriseDiv.innerHTML = randomSurprise;
             surpriseDiv.style.cssText = `
@@ -663,42 +1040,6 @@
             }, 3000);
         }
 
-        // Adicionar animação para partículas especiais
-        const specialParticleStyle = document.createElement('style');
-        specialParticleStyle.textContent = `
-            @keyframes specialFloat {
-                0% { 
-                    transform: scale(0) rotate(0deg); 
-                    opacity: 1; 
-                }
-                50% { 
-                    transform: scale(1.5) rotate(180deg); 
-                    opacity: 0.8; 
-                }
-                100% { 
-                    transform: scale(0.5) rotate(360deg) translateY(-100px); 
-                    opacity: 0; 
-                }
-            }
-        `;
-        document.head.appendChild(specialParticleStyle);
-
-        // Adicionar animação CSS para surpresa
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes surpriseAnimation {
-                0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); opacity: 0; }
-                50% { transform: translate(-50%, -50%) scale(1.1) rotate(5deg); opacity: 1; }
-                100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Adicionar efeito de partículas no clique
-        document.addEventListener('click', function(e) {
-            createParticle(e.clientX, e.clientY);
-        });
-
         function createParticle(x, y) {
             const particle = document.createElement('div');
             particle.innerHTML = '✨';
@@ -719,15 +1060,50 @@
             }, 1000);
         }
 
-        // Adicionar animação para partículas
-        const particleStyle = document.createElement('style');
-        particleStyle.textContent = `
+        // Event listeners
+        document.addEventListener('click', function(e) {
+            createParticle(e.clientX, e.clientY);
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeGameModal();
+            }
+        });
+
+        // CSS adicional para animações
+        const additionalStyles = document.createElement('style');
+        additionalStyles.textContent = `
+            @keyframes specialFloat {
+                0% { 
+                    transform: scale(0) rotate(0deg); 
+                    opacity: 1; 
+                }
+                50% { 
+                    transform: scale(1.5) rotate(180deg); 
+                    opacity: 0.8; 
+                }
+                100% { 
+                    transform: scale(0.5) rotate(360deg) translateY(-100px); 
+                    opacity: 0; 
+                }
+            }
+            @keyframes surpriseAnimation {
+                0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); opacity: 0; }
+                50% { transform: translate(-50%, -50%) scale(1.1) rotate(5deg); opacity: 1; }
+                100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+            }
             @keyframes particleFloat {
                 0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
                 100% { transform: translate(-50%, -200%) scale(1); opacity: 0; }
             }
+            @keyframes heartParticleFloat {
+                0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                100% { transform: translate(-50%, -150%) scale(0.5) rotate(360deg); opacity: 0; }
+            }
         `;
-        document.head.appendChild(particleStyle);
+        document.head.appendChild(additionalStyles);
     </script>
 </body>
 </html>
